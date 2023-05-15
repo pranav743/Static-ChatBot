@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        *{
+            box-sizing: border-box;
+            margin: 0;
+        }
+        .center{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .page{
+            width: 100%;
+            height: 100vh;
+            background-color: gray;
+        }
+
+        .chatbot{
+            width: 300px;
+            height: 400px;
+           
+            border-radius: 10px 10px 5px 5px;
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            overflow: hidden;
+            transition: all 0.5s;
+        }
+        
+        #toggle-chatbot{
+            /* background-color: rgb(32, 144, 255); */
+            background-image: linear-gradient(60deg, #00157e, #2c49b0, #5f2bb0);
+            height: 50px;
+            cursor: pointer;
+            border-bottom: solid 1px #fff;
+        }
+
+        #chat-section{
+            height: 50px;
+            border: none;
+            position: absolute;
+            background-color: #eee;
+            bottom: 0;
+            width: 100%;
+            border-radius: 5px;
+            box-shadow: 0 0 1px #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+        }
+
+        #chat-history{
+            min-height: 300px;
+            max-height: 300px;
+            overflow-y: auto;
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+            max-width: 100%;
+            background-color: rgb(218, 218, 218);
+            padding: 15px 5px;
+            animation: chatcolor 10s linear infinite;
+        }
+        @keyframes chatcolor {
+            0%{
+                background-color: rgb(218, 218, 218);
+            }
+            50%{
+                background-color: rgb(226, 213, 243);
+            }
+            100%{
+                background-color: rgb(218, 218, 218);      
+            }
+        }
+        #chat-history::-webkit-scrollbar {
+            width: 2px;
+        }
+
+        .chat{
+            min-height: auto;
+            width: 100%;
+          
+            margin-top: 0px;
+            padding: 10px 0;
+           
+            position: relative;
+        }
+        .message-bot{
+            min-width: 100px;
+            max-width: 200px;
+            height: auto;
+            box-shadow: 0 0 3px #7b40f1;
+            background-color: #ccc;
+            padding: 10px 15px;
+            border-radius: 0px 20px 20px 20px;
+            margin-left: 10px;
+            background-image: linear-gradient(60deg, #2c49b0, #5f2bb0);
+            color: #fff;
+            
+        }
+        .arrow-bot{
+            height: 10px;
+            width: 20px;
+            background-color: #ccc;
+            position: absolute;
+            top: 10px;
+            left: 5px;
+            border-radius: 0 0 0 10px;
+            background-color: #2c49b0;
+        }
+
+
+        .message-user{
+            min-width: 100px;
+            max-width: 200px;
+            height: auto;
+            background-color: #ccc;
+            box-shadow: 0 0 3px #7b40f1;
+            padding: 10px 15px;
+            border-radius: 20px 0 20px 20px;
+            margin-left: 80px;
+            background-image: linear-gradient(60deg, #2c49b0, #5f2bb0);
+            color: #fff;
+        }
+        .arrow-user{
+            height: 10px;
+            width: 20px;
+            background-color: #ccc;
+            position: absolute;
+            top: 10px;
+            right: 5px;
+            border-radius: 0 0 10px 0;
+            background-color: #5f2bb0;
+        }
+
+        .show-hide{
+            transform: translateY(360px) translateX(260px);
+            animation: show 1s linear;
+        }
+        @keyframes show {
+            0%{
+                transform: translateY(120px) ;
+            }
+            60%{
+                transform: translateY(360px);
+            }
+        }
+
+        
+
+        
+
+    </style>
+    <title>Document</title>
+</head>
+<body>
+    
+
+    <div class="chatbot show-hide" >
+        <div id="toggle-chatbot"  onclick="toggle_chatbot()">
+
+            <span style="display: block;min-height: 100%; width: 50px; background-color: #0095ff00; display: flex; align-items: center; justify-content: center;"><i id="toggle-option" class="fas fa-comment" aria-hidden="true" style="color: #fff;"></i></span>
+            <span style="position: absolute; top: 15px; left: 50px; font-size: 20px; letter-spacing: 2px;"><p style="color: #fff;">SciBot</p></span>
+        
+        </div>
+
+        <div id="chat-history">
+        
+            
+        
+            <div class="chat">
+                <section class="message-bot">
+                    Welcome to  <p style="color: #f1ee40;">SciAstra !</p><br>
+                    What would you like to know about?
+                    <br>
+                    1. About Us <br>
+                    2. Programs <br>
+                    3. Selections <br>
+                    4. FAQ's <br>
+                    5. Our Blogs <br>
+                    6. Contact us <br><br>
+                    Please type the number for corresponding information <br>
+                    example type "1" for About Us
+                    
+
+                </section>
+                <span class="arrow-bot" style="background-color:#4639b0;"></span>
+            </div>
+            <!-- <div class="chat">
+                <section class="message-user">
+                    How r u ?
+                </section>
+                <span class="arrow-user"></span>
+            </div> -->
+            
+
+
+            
+        </div>
+        
+        <div id="chat-section">
+            <span style="display: flex; flex-direction: row; margin-left: 40px;">
+                 <input type="text" id="user_input" placeholder="Start Typing..." style="height: 40px; width: 250px; border-radius: 20px; padding: 5px 45px 5px 15px; border: none; outline: none; box-shadow: 0 0 3px #000;"> 
+                    <span style="display: flex; align-items: center; justify-content: center; height: 38px; width: 38px; background-image: linear-gradient(60deg, #2c49b0, #5f2bb0); border-radius: 20px; transform: translateX(-40px); margin-top: 0.5px;" onclick="send_message()">
+                            <i class="fas fa-paper-plane" style="color: #fff;"></i>
+            </span></span>
+        </div>
+    </div>
+    
+    <div class="page center">
+        <div class="center" style="font-size: 20px; letter-spacing: 2px ; color: #ffffff; height: 80px; background-color: #7b40f1; width: 100%;">Select the Chat option at bottom Right to interact with the chatbot </div>
+    </div>
+    <div class="page"></div>
+    
+
+
+
+
+
+    <script>
+        const chatbot = document.getElementsByClassName('chatbot')[0];
+        const user_input = document.getElementById('user_input');
+        const chat_history = document.getElementById('chat-history');
+        console.log(chat_history);
+        const toggle_option = document.getElementById('toggle-option');
+
+        function initialize_chat() {
+            let add_msg = `
+
+            `;
+            chat_history.insertAdjacentHTML("beforeend",add_msg);
+        }
+
+        function toggle_chatbot(){
+            chatbot.classList.toggle('show-hide');
+            toggle_option.classList.toggle('fa-chevron-down');
+            toggle_option.classList.toggle('fa-comment');
+        }
+
+        user_input.addEventListener('keydown', function(event) {
+        if (event.keyCode === 13) {
+            send_message();
+        }
+        });
+
+        function send_message(){
+           
+            let message = user_input.value;
+            console.log("USER MESSAGE = " + message);
+            let history = chat_history.innerHTML;
+          
+            if (message!=""){
+                let add_msg = `
+                <div class="chat">
+                    <section class="message-user">
+                        ${message}
+                    </section>
+                    <span class="arrow-user"></span>
+                </div>
+                `
+                chat_history.insertAdjacentHTML("beforeend",add_msg);
+                chat_history.scrollTop = chat_history.scrollHeight;
+                setTimeout(send_response, 1000, message);
+                user_input.value = "";
+            }
+        }
+
+        function send_response(input){
+            if (!isNaN(input)){
+                if (input == 1){
+                    
+                    let add_msg = `
+
+                    <div class="chat">
+                        <section class="message-bot">
+                            SciAstra is an online education platform with over 60 mentors from top research institutes in India. We believe education is more than just competitive exams and aim to guide students to think like scientists. Our services include guidance for institutes like IISERs, NISER, IISc Bangalore, ISI, CMI, and others, as well as assistance in preparing for research entrance exams such as IAT, NEST, ISI, CMI, IACS, etc.
+                        </section>
+                        <span class="arrow-bot" style="background-color:#4639b0;"></span>
+                    </div>
+
+                    `;
+                    chat_history.insertAdjacentHTML("beforeend",add_msg);
+                    chat_history.scrollTop = chat_history.scrollHeight;
+                }
+                else if (input == 2){
+                    
+
+                    let add_msg = `
+
+                    <div class="chat">
+                        <section class="message-bot">
+                            To know more about our Programs click <a href="https://www.sciastra.com/courses/" style="color: yellow; text-decoration: none;">Here</a>
+                            
+                        </section>
+                        <span class="arrow-bot" style="background-color:#4639b0;"></span>
+                    </div>
+
+                    `;
+                    chat_history.insertAdjacentHTML("beforeend",add_msg);
+                    chat_history.scrollTop = chat_history.scrollHeight;
+                }
+                else if (input == 3){
+                    
+
+                    let add_msg = `
+
+                    <div class="chat">
+                        <section class="message-bot">
+                            To explore some of our Success Stories click <br><a href="https://www.sciastra.com/selections/" style="color: yellow; text-decoration: none;">Here</a>
+                            
+                        </section>
+                        <span class="arrow-bot" style="background-color:#4639b0;"></span>
+                    </div>
+
+                    `;
+                    chat_history.insertAdjacentHTML("beforeend",add_msg);
+                    chat_history.scrollTop = chat_history.scrollHeight;
+                }
+                else if (input == 4){
+                    
+
+                    let add_msg = `
+
+                    <div class="chat">
+                        <section class="message-bot">
+                            Currently we dont have any FAQ's <br>
+                            You can contact us for your queries
+                            
+                        </section>
+                        <span class="arrow-bot" style="background-color:#4639b0;"></span>
+                    </div>
+
+                    `;
+                    chat_history.insertAdjacentHTML("beforeend",add_msg);
+                    chat_history.scrollTop = chat_history.scrollHeight;
+                }
+                else if (input == 5){
+                    
+
+                    let add_msg = `
+
+                    <div class="chat">
+                        <section class="message-bot">
+                            Read our Blogs <br><a href="https://www.sciastra.com/blog/" style="color: yellow; text-decoration: none;">Here</a>
+                            
+                        </section>
+                        <span class="arrow-bot" style="background-color:#4639b0;"></span>
+                    </div>
+
+                    `;
+                    chat_history.insertAdjacentHTML("beforeend",add_msg);
+                    chat_history.scrollTop = chat_history.scrollHeight;
+                }
+
+                else if (input == 6){
+                    
+
+                    let add_msg = `
+
+                    <div class="chat">
+                        <section class="message-bot">
+                            E-mail - <br>
+                            <p style="color: yellow">support@sciastra.com</p> <br>
+                            Address - <br>
+                          
+                            <p style="color: yellow">SciAstra Education Pvt Ltd, Bhubaneswar, Odishas</p>
+                            
+                        </section>
+                        <span class="arrow-bot" style="background-color:#4639b0;"></span>
+                    </div>
+
+                    `;
+                    chat_history.insertAdjacentHTML("beforeend",add_msg);
+                    chat_history.scrollTop = chat_history.scrollHeight;
+                }
+                else{
+                    let add_msg = `
+
+                    <div class="chat">
+                        <section class="message-bot">
+                            There is no such Option! <br><br>
+                            1. About Us <br>
+                            2. Programs <br>
+                            3. Selections <br>
+                            4. FAQ's <br>
+                            5. Our Blogs <br>
+                            6. Contact us <br><br>
+                            Please type the number for corresponding information <br>
+                            example type "1" for About Us
+                            
+                        </section>
+                        <span class="arrow-bot" style="background-color:#4639b0;"></span>
+                    </div>
+
+                    `;
+                    chat_history.insertAdjacentHTML("beforeend",add_msg);
+                    chat_history.scrollTop = chat_history.scrollHeight;
+
+                }
+                
+            }
+            else if (isNaN(input)) {
+
+                console.log(input);
+                let add_msg = `
+
+                <div class="chat">
+                    <section class="message-bot">
+                        Ops, Wrong Input !
+                        <br>
+                        Select the option Number.
+                    </section>
+                    <span class="arrow-bot" style="background-color:#2c49b0;"></span>
+                </div>
+
+                `;
+                chat_history.insertAdjacentHTML("beforeend",add_msg);
+                chat_history.scrollTop = chat_history.scrollHeight;
+            
+            
+            }
+            else{
+                console.log(input);
+                let add_msg = `
+
+                <div class="chat">
+                    <section class="message-bot">
+                        Ops, Wrong Option !
+                        <br>
+                        Select Again.
+                    </section>
+                    <span class="arrow-bot" style="background-color:#2c49b0;"></span>
+                </div>
+
+                `;
+                chat_history.insertAdjacentHTML("beforeend",add_msg);
+                chat_history.scrollTop = chat_history.scrollHeight;
+            }
+        }
+    </script>
+
+</body>
+</html>
